@@ -2,26 +2,275 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/* Font Faces */
+@font-face {
+  font-family: 'Satoshi';
+  src: url('/fonts/satoshi-regular.woff2') format('woff2'),
+       url('/fonts/satoshi-regular.woff') format('woff');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+@font-face {
+  font-family: 'Satoshi';
+  src: url('/fonts/satoshi-500.woff2') format('woff2'),
+       url('/fonts/satoshi-500.woff') format('woff');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Satoshi';
+  src: url('/fonts/satoshi-700.woff2') format('woff2'),
+       url('/fonts/satoshi-700.woff') format('woff');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Satoshi';
+  src: url('/fonts/satoshi-900.woff2') format('woff2'),
+       url('/fonts/satoshi-900.woff') format('woff');
+  font-weight: 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'GeneralSans';
+  src: url('/fonts/GeneralSans-500.woff2') format('woff2'),
+       url('/fonts/GeneralSans-500.woff') format('woff');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'GeneralSans';
+  src: url('/fonts/generalsans-500italic.woff2') format('woff2'),
+       url('/fonts/generalsans-500italic.woff') format('woff');
+  font-weight: 500;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Recia';
+  src: url('/fonts/recia-500.woff2') format('woff2'),
+       url('/fonts/recia-500.woff') format('woff');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Recia';
+  src: url('/fonts/recia-500italic.woff2') format('woff2'),
+       url('/fonts/recia-500italic.woff') format('woff');
+  font-weight: 500;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Recia';
+  src: url('/fonts/recia-700.woff2') format('woff2'),
+       url('/fonts/recia-700.woff') format('woff');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Recia';
+  src: url('/fonts/recia-700italic.woff2') format('woff2'),
+       url('/fonts/recia-700italic.woff') format('woff');
+  font-weight: 700;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Recia';
+  src: url('/fonts/recia-italic.woff2') format('woff2'),
+       url('/fonts/recia-italic.woff') format('woff');
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Gambarino';
+  src: url('/fonts/gambarino-regular.woff2') format('woff2'),
+       url('/fonts/gambarino-regular.woff') format('woff');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  --header-height: 80px;
+  --site-background: #FFFFFF;
+  --layout-background: #F1F1F1;
+  --color-primary: #1D1D1D;
+  --color-secondary: #6E6E6E;
+  --color-accent: #0D6EFF;
+  --color-border: #E4E4E4;
+  --color-excerpt: #6E6E6E;
+  --badge-border-radius: 3px;
+  --thumbnail-border-radius: 8px;
+  --button-border-radius: 26px;
+  --font-base: 'Satoshi', sans-serif;
+  --font-headings: 'GeneralSans', sans-serif;
+  --font-serif: 'Recia', serif;
+  --font-display: 'Gambarino', serif;
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-base);
+  color: var(--color-primary);
+  background-color: var(--layout-background);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
-  }
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-headings);
+  font-weight: 500;
+}
+
+.article-content {
+  font-size: 17px;
+  line-height: 1.8;
+  color: var(--color-primary);
+}
+
+.article-content p {
+  margin-bottom: 1.5em;
+}
+
+.article-content h2 {
+  font-family: var(--font-headings);
+  font-size: 24px;
+  font-weight: 500;
+  margin: 2em 0 1em;
+}
+
+.article-content h3 {
+  font-family: var(--font-headings);
+  font-size: 20px;
+  font-weight: 500;
+  margin: 1.5em 0 0.75em;
+}
+
+.article-content blockquote {
+  border-left: 3px solid var(--color-border);
+  padding-left: 1.5em;
+  margin: 1.5em 0;
+  font-style: italic;
+  color: var(--color-secondary);
+}
+
+.article-content ul,
+.article-content ol {
+  margin: 1em 0;
+  padding-left: 1.5em;
+}
+
+.article-content li {
+  margin-bottom: 0.5em;
+}
+
+.article-content a {
+  color: var(--color-accent);
+  text-decoration: underline;
+}
+
+.article-content img {
+  max-width: 100%;
+  height: auto;
+  border-radius: var(--thumbnail-border-radius);
+  margin: 1.5em 0;
+}
+
+.category-badge {
+  display: inline-block;
+  font-family: var(--font-headings);
+  font-size: 10px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 4px 10px;
+  border-radius: var(--badge-border-radius);
+  background-color: var(--color-primary);
+  color: #FFFFFF;
+  line-height: 1;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--layout-background);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: 4px;
+}
+
+.tiptap {
+  outline: none;
+  min-height: 400px;
+  font-size: 16px;
+  line-height: 1.7;
+}
+
+.tiptap p { margin-bottom: 1em; }
+
+.tiptap h1, .tiptap h2, .tiptap h3 {
+  font-family: var(--font-headings);
+  font-weight: 500;
+  margin: 1.5em 0 0.5em;
+}
+
+.tiptap h1 { font-size: 2em; }
+.tiptap h2 { font-size: 1.5em; }
+.tiptap h3 { font-size: 1.25em; }
+
+.tiptap ul, .tiptap ol { padding-left: 1.5em; margin: 1em 0; }
+.tiptap li { margin-bottom: 0.3em; }
+
+.tiptap blockquote {
+  border-left: 3px solid var(--color-border);
+  padding-left: 1em;
+  margin: 1em 0;
+  font-style: italic;
+}
+
+.tiptap img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+}
+
+.tiptap a {
+  color: var(--color-accent);
+  text-decoration: underline;
+}
+
+.tiptap p.is-editor-empty:first-child::before {
+  color: #adb5bd;
+  content: attr(data-placeholder);
+  float: left;
+  height: 0;
+  pointer-events: none;
 }

@@ -9,8 +9,21 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        background: "var(--background)",
-        foreground: "var(--foreground)",
+        primary: "#1D1D1D",
+        secondary: "#6E6E6E",
+        accent: "#0D6EFF",
+        border: "#E4E4E4",
+        "layout-bg": "#F1F1F1",
+        "site-bg": "#FFFFFF",
+      },
+      fontFamily: {
+        base: ["Satoshi", "sans-serif"],
+        headings: ["GeneralSans", "sans-serif"],
+        serif: ["Recia", "serif"],
+        display: ["Gambarino", "serif"],
+      },
+      maxWidth: {
+        content: "1200px",
       },
     },
   },
