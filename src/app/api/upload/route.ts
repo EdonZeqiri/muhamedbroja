@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
-import { uploadFile } from "@/lib/supabase";
+import { put } from "@vercel/blob";
 
 export async function POST(req: NextRequest) {
   const session = await auth();
@@ -15,13 +15,13 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "No file provided" }, { status: 400 });
   }
 
-  const bytes = await file.arrayBuffer();
-  const buffer = Buffer.from(bytes);
-
   const ext = file.name.split(".").pop() || "jpg";
   const fileName = `${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
 
-  const url = await uploadFile(buffer, fileName, file.type);
+  const blob = await put(fileName, file, {
+    access: "public",
+    addRandomSuffix: false,
+  });
 
-  return NextResponse.json({ url });
+  return NextResponse.json({ url: blob.url });
 }
