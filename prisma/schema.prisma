@@ -44,23 +44,43 @@ model Category {
   @@index([slug])
 }
 
+model Playlist {
+  id                String    @id @default(cuid())
+  title             String
+  youtubePlaylistId String    @unique
+  thumbnail         String?
+  description       String?
+  lectures          Lecture[]
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+
+  @@index([youtubePlaylistId])
+}
+
 model Lecture {
-  id          String   @id @default(cuid())
+  id          String    @id @default(cuid())
   title       String
   youtubeUrl  String
   youtubeId   String
   thumbnail   String
   description String?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  order       Int       @default(0)
+  playlistId  String?
+  playlist    Playlist? @relation(fields: [playlistId], references: [id], onDelete: Cascade)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@index([playlistId])
 }
 
 model Question {
-  id        String   @id @default(cuid())
-  question  String
-  answer    String
-  order     Int      @default(0)
-  published Boolean  @default(true)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id             String   @id @default(cuid())
+  question       String
+  questionDetail String?
+  answer         String
+  category       String   @default("Te pergjithshme")
+  order          Int      @default(0)
+  published      Boolean  @default(true)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
 }

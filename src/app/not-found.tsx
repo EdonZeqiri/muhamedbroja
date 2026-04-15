@@ -3,7 +3,7 @@ import Link from "next/link";
 export default function NotFound() {
   return (
     <div className="max-w-content mx-auto px-4 py-20 text-center">
-      <div className="bg-white rounded-lg border border-border p-12 max-w-lg mx-auto">
+      <div className="bg-white/70 rounded-2xl border border-accent/10 p-12 max-w-lg mx-auto">
         <h1 className="font-headings text-6xl font-medium text-primary mb-4">404</h1>
         <p className="text-secondary mb-6">Faqja që kërkuat nuk u gjet.</p>
         <Link

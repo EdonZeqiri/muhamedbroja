@@ -1,5 +1,7 @@
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
+import SearchBar from "@/components/SearchBar";
+import { Suspense } from "react";
 
 export default async function Sidebar() {
   const [recentArticles, categories] = await Promise.all([
@@ -17,9 +19,42 @@ export default async function Sidebar() {
 
   return (
     <aside className="space-y-6">
+      {/* Search */}
+      <div className="bg-white/70 rounded-2xl p-5 border border-accent/10">
+        <h3 className="font-bold text-base mb-4 pb-3 border-b border-border">
+          Kërko
+        </h3>
+        <Suspense fallback={null}>
+          <SearchBar />
+        </Suspense>
+      </div>
+
+      {/* Categories - link to dedicated category pages */}
+      <div className="bg-white/70 rounded-2xl p-5 border border-accent/10">
+        <h3 className="font-bold text-base mb-4 pb-3 border-b border-border">
+          Kategoritë
+        </h3>
+        <div className="space-y-2">
+          {categories
+            .filter((c) => c._count.articles > 0)
+            .map((category) => (
+              <Link
+                key={category.slug}
+                href={`/kategoria/${category.slug}`}
+                className="flex items-center justify-between text-sm text-primary hover:text-accent transition-colors"
+              >
+                <span>{category.name}</span>
+                <span className="text-xs text-secondary bg-layout-bg rounded-full px-2 py-0.5">
+                  {category._count.articles}
+                </span>
+              </Link>
+            ))}
+        </div>
+      </div>
+
       {/* Recent Posts */}
-      <div className="bg-white rounded-lg p-5 border border-border">
-        <h3 className="font-headings text-base font-medium mb-4 pb-3 border-b border-border">
+      <div className="bg-white/70 rounded-2xl p-5 border border-accent/10">
+        <h3 className="font-bold text-base mb-4 pb-3 border-b border-border">
           Postimet e fundit
         </h3>
         <div className="space-y-3">
@@ -29,7 +64,7 @@ export default async function Sidebar() {
               href={`/shkrime/${article.slug}`}
               className="block group"
             >
-              <h4 className="text-sm font-medium text-primary group-hover:text-secondary transition-colors leading-snug">
+              <h4 className="text-sm font-medium text-primary group-hover:text-accent transition-colors leading-snug">
                 {article.title}
               </h4>
               <time className="text-xs text-secondary mt-1 block">
@@ -44,39 +79,16 @@ export default async function Sidebar() {
         </div>
       </div>
 
-      {/* Categories */}
-      <div className="bg-white rounded-lg p-5 border border-border">
-        <h3 className="font-headings text-base font-medium mb-4 pb-3 border-b border-border">
-          Kategoritë
-        </h3>
-        <div className="space-y-2">
-          {categories
-            .filter((c) => c._count.articles > 0)
-            .map((category) => (
-              <Link
-                key={category.slug}
-                href={`/?kategoria=${category.slug}`}
-                className="flex items-center justify-between text-sm text-primary hover:text-secondary transition-colors"
-              >
-                <span>{category.name}</span>
-                <span className="text-xs text-secondary bg-layout-bg rounded-full px-2 py-0.5">
-                  {category._count.articles}
-                </span>
-              </Link>
-            ))}
-        </div>
-      </div>
-
       {/* YouTube Subscribe */}
-      <div className="bg-white rounded-lg p-5 border border-border">
-        <h3 className="font-headings text-base font-medium mb-4 pb-3 border-b border-border">
+      <div className="bg-white/70 rounded-2xl p-5 border border-accent/10">
+        <h3 className="font-bold text-base mb-4 pb-3 border-b border-border">
           YouTube
         </h3>
         <p className="text-sm text-secondary mb-3">
           Ndiqni kanalin tonë në YouTube për ligjerata dhe mësime.
         </p>
         <a
-          href="https://www.youtube.com/@MuhamedBroja?sub_confirmation=1"
+          href="https://www.youtube.com/@dr.muhamedbroja?sub_confirmation=1"
           target="_blank"
           rel="noopener noreferrer"
           className="inline-flex items-center gap-2 bg-red-600 text-white text-sm font-medium px-4 py-2 rounded-full hover:bg-red-700 transition-colors"

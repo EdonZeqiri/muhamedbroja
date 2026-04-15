@@ -22,6 +22,10 @@ const nextConfig = {
         protocol: "https",
         hostname: "muhamedbroja.com",
       },
+      {
+        protocol: "https",
+        hostname: "images.unsplash.com",
+      },
     ],
   },
 };

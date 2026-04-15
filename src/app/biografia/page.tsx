@@ -1,14 +1,22 @@
 import { Metadata } from "next";
+import Image from "next/image";
 
 export const metadata: Metadata = {
-  title: "Biografia",
+  title: "Biografia - Dr. Muhamed Broja",
   description:
-    "Biografia e Dr. Muhamed Broja - Imam dhe ligjerues në qytetin e Mitrovicës, diplomuar në Universitetin Islamik të Medinës.",
+    "Biografia e Dr. Muhamed Broja - Imam dhe ligjerues në qytetin e Mitrovicës. Diplomuar në Universitetin Islamik të Medinës, fakulteti i Hadithit. Doktor i shkencave islame.",
   openGraph: {
     title: "Biografia | Dr. Muhamed Broja",
     description:
-      "Biografia e Dr. Muhamed Broja - Imam dhe ligjerues në qytetin e Mitrovicës.",
+      "Biografia e Dr. Muhamed Broja - Imam dhe ligjerues në Mitrovicë, diplomuar në Universitetin Islamik të Medinës.",
     locale: "sq_AL",
+    images: [{ url: "/images/muhamed-broja.jpg", width: 600, height: 600, alt: "Dr. Muhamed Broja" }],
+  },
+  twitter: {
+    card: "summary",
+    title: "Biografia - Dr. Muhamed Broja",
+    description:
+      "Imam dhe ligjerues në Mitrovicë, diplomuar në Universitetin Islamik të Medinës.",
   },
   alternates: {
     canonical: "/biografia",
@@ -33,7 +41,7 @@ export default function BiografiaPage() {
     url: "https://muhamedbroja.com",
     sameAs: [
       "https://www.facebook.com/muhamedbroja",
-      "https://www.youtube.com/@MuhamedBroja",
+      "https://www.youtube.com/@dr.muhamedbroja",
     ],
   };
 
@@ -46,23 +54,29 @@ export default function BiografiaPage() {
 
       <div className="max-w-content mx-auto px-4 py-8">
         <div className="max-w-3xl mx-auto">
-          <div className="bg-white rounded-lg border border-border overflow-hidden">
+          <div className="bg-white/70 rounded-2xl border border-accent/10 overflow-hidden">
             {/* Header with separator */}
             <div className="p-6 sm:p-8">
               <hr className="border-border mb-8" />
 
               {/* Profile Image */}
               <div className="flex justify-center mb-8">
-                <div className="w-[150px] h-[150px] rounded-full bg-layout-bg overflow-hidden border-2 border-border flex items-center justify-center">
-                  <svg className="w-20 h-20 text-secondary/30" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
-                  </svg>
+                <div className="relative w-[180px] h-[180px] rounded-full overflow-hidden border-2 border-accent/20">
+                  <Image
+                    src="/images/muhamed-broja.jpg"
+                    alt="Dr. Muhamed Broja"
+                    fill
+                    className="object-cover"
+                    sizes="180px"
+                    quality={95}
+                    priority
+                  />
                 </div>
               </div>
 
               {/* Biography Text */}
-              <blockquote className="text-center">
-                <div className="space-y-6 text-base leading-relaxed">
+              <blockquote className="text-center max-w-[680px] mx-auto">
+                <div className="space-y-6 font-serif text-lg leading-[1.58] text-[#242424]">
                   <p className="font-headings">
                     Muhamed Broja lindi në Mitrovicë, (09.04.1981). Shkollën fillore e kreu
                     në vendlindje, ndërsa të mesmen në Medresenë &ldquo;Alauddin&rdquo; &ndash;

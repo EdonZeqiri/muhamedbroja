@@ -1,13 +1,22 @@
 import Link from "next/link";
+import Image from "next/image";
 
 export default function Footer() {
   return (
-    <footer className="bg-primary text-white">
+    <footer className="bg-[#1D1D1F] text-white">
       <div className="max-w-content mx-auto px-4 py-12">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {/* About */}
           <div>
-            <h3 className="font-headings text-lg font-medium mb-4">Muhamed Broja</h3>
+            <div className="mb-4">
+              <Image
+                src="/images/MB-logo-white-1.svg"
+                alt="Muhamed Broja"
+                width={160}
+                height={40}
+                className="h-[40px] w-auto brightness-0 invert"
+              />
+            </div>
             <p className="text-sm text-gray-400 leading-relaxed">
               Faqja zyrtare e Dr. Muhamed Broja. Shkrime, ligjerata dhe mësime islame në gjuhën shqipe.
             </p>
@@ -15,8 +24,8 @@ export default function Footer() {
 
           {/* Links */}
           <div>
-            <h3 className="font-headings text-lg font-medium mb-4">Faqet</h3>
-            <nav className="flex flex-col gap-2">
+            <h3 className="text-lg font-bold mb-4">Faqet</h3>
+            <nav aria-label="Footer navigation" className="flex flex-col gap-2">
               <Link href="/" className="text-sm text-gray-400 hover:text-white transition-colors">
                 Shkrime
               </Link>
@@ -34,7 +43,7 @@ export default function Footer() {
 
           {/* Social */}
           <div>
-            <h3 className="font-headings text-lg font-medium mb-4">Na ndiqni</h3>
+            <h3 className="text-lg font-bold mb-4">Na ndiqni</h3>
             <div className="flex items-center gap-4">
               <a
                 href="https://www.facebook.com/muhamedbroja"
@@ -46,7 +55,7 @@ export default function Footer() {
                 Facebook
               </a>
               <a
-                href="https://www.youtube.com/@MuhamedBroja"
+                href="https://www.youtube.com/@dr.muhamedbroja"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center gap-2 text-sm text-gray-400 hover:text-white transition-colors"
@@ -60,7 +69,7 @@ export default function Footer() {
 
         <div className="mt-8 pt-8 border-t border-gray-700 text-center">
           <p className="text-xs text-gray-500">
-            &copy; {new Date().getFullYear()} Dr. Muhamed Broja. Të gjitha të drejtat e rezervuara.
+            &copy; {new Date().getFullYear()} &mdash; Dr. Muhamed Broja. All Rights Reserved.
           </p>
         </div>
       </div>

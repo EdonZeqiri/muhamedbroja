@@ -31,8 +31,20 @@ export async function generateMetadata({ params }: ArticlePageProps): Promise<Me
       type: "article",
       locale: "sq_AL",
       publishedTime: article.createdAt.toISOString(),
+      modifiedTime: article.updatedAt.toISOString(),
       authors: [article.author],
-      ...(article.thumbnail && { images: [{ url: article.thumbnail }] }),
+      section: article.category?.name || "Shkrime Islame",
+      ...(article.thumbnail && {
+        images: [
+          { url: article.thumbnail, width: 1200, height: 630, alt: article.title },
+        ],
+      }),
+    },
+    twitter: {
+      card: article.thumbnail ? "summary_large_image" : "summary",
+      title: article.title,
+      description,
+      ...(article.thumbnail && { images: [article.thumbnail] }),
     },
     alternates: {
       canonical: `/shkrime/${article.slug}`,
@@ -60,30 +72,64 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
 
   if (!article) notFound();
 
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "Article",
-    headline: article.title,
-    datePublished: article.createdAt.toISOString(),
-    dateModified: article.updatedAt.toISOString(),
-    author: {
-      "@type": "Person",
-      name: article.author,
-      url: "https://muhamedbroja.com/biografia",
+  const jsonLd = [
+    {
+      "@context": "https://schema.org",
+      "@type": "Article",
+      headline: article.title,
+      datePublished: article.createdAt.toISOString(),
+      dateModified: article.updatedAt.toISOString(),
+      author: {
+        "@type": "Person",
+        name: article.author,
+        url: "https://muhamedbroja.com/biografia",
+        image: "https://muhamedbroja.com/images/muhamed-broja.jpg",
+      },
+      publisher: {
+        "@type": "Person",
+        name: "Dr. Muhamed Broja",
+        url: "https://muhamedbroja.com",
+      },
+      ...(article.thumbnail && {
+        image: article.thumbnail,
+      }),
+      description:
+        article.excerpt ||
+        article.content.replace(/<[^>]+>/g, "").slice(0, 160),
+      inLanguage: "sq",
+      mainEntityOfPage: {
+        "@type": "WebPage",
+        "@id": `https://muhamedbroja.com/shkrime/${article.slug}`,
+      },
     },
-    publisher: {
-      "@type": "Person",
-      name: "Dr. Muhamed Broja",
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        {
+          "@type": "ListItem",
+          position: 1,
+          name: "Shkrime",
+          item: "https://muhamedbroja.com",
+        },
+        ...(article.category
+          ? [
+              {
+                "@type": "ListItem",
+                position: 2,
+                name: article.category.name,
+                item: `https://muhamedbroja.com/kategoria/${article.category.slug}`,
+              },
+            ]
+          : []),
+        {
+          "@type": "ListItem",
+          position: article.category ? 3 : 2,
+          name: article.title,
+        },
+      ],
     },
-    ...(article.thumbnail && {
-      image: article.thumbnail,
-    }),
-    description: article.excerpt || article.content.replace(/<[^>]+>/g, "").slice(0, 160),
-    mainEntityOfPage: {
-      "@type": "WebPage",
-      "@id": `https://muhamedbroja.com/shkrime/${article.slug}`,
-    },
-  };
+  ];
 
   return (
     <>
@@ -96,26 +142,26 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
         <div className="flex flex-col lg:flex-row gap-8">
           {/* Article */}
           <article className="flex-1 min-w-0">
-            <div className="bg-white rounded-lg border border-border overflow-hidden">
+            <div className="bg-white/70 rounded-2xl border border-accent/10 overflow-hidden">
               {/* Header */}
               <div className="p-6 sm:p-8">
                 <Link
                   href="/"
-                  className="inline-flex items-center gap-1 text-sm text-secondary hover:text-primary transition-colors mb-4"
+                  className="inline-flex items-center gap-1 text-sm text-secondary hover:text-primary transition-colors mb-6"
                 >
                   <ChevronLeft size={14} />
                   Kthehu te shkrimet
                 </Link>
 
-                {article.category && (
-                  <span className="category-badge mb-3 block w-fit">
-                    {article.category.name}
-                  </span>
-                )}
-
                 <h1 className="font-headings text-2xl sm:text-3xl font-medium leading-tight mb-4">
                   {article.title}
                 </h1>
+
+                {article.category && (
+                  <span className="category-badge mb-4 block w-fit">
+                    {article.category.name}
+                  </span>
+                )}
 
                 <div className="flex items-center gap-3 text-sm text-secondary pb-6 border-b border-border">
                   <span className="font-medium">{article.author}</span>
@@ -139,6 +185,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
                       alt={article.title}
                       fill
                       className="object-cover"
+                      quality={90}
                       priority
                     />
                   </div>

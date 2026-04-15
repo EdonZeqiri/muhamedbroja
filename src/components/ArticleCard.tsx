@@ -21,17 +21,18 @@ export default function ArticleCard({
   createdAt,
 }: ArticleCardProps) {
   return (
-    <article className="bg-white rounded-lg border border-border overflow-hidden hover:shadow-sm transition-shadow">
-      <Link href={`/shkrime/${slug}`} className="flex flex-col sm:flex-row">
-        {/* Thumbnail */}
-        <div className="sm:w-[200px] sm:min-w-[200px] h-[180px] sm:h-auto relative bg-layout-bg">
+    <article className="group">
+      <Link href={`/shkrime/${slug}`} className="block">
+        {/* Thumbnail - on top */}
+        <div className="relative w-full aspect-[16/10] rounded-xl overflow-hidden bg-accent/[0.06] mb-4">
           {thumbnail ? (
             <Image
               src={thumbnail}
               alt={title}
               fill
-              className="object-cover"
-              sizes="(max-width: 640px) 100vw, 200px"
+              className="object-cover group-hover:scale-105 transition-transform duration-300"
+              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 550px"
+              quality={90}
             />
           ) : (
             <div className="w-full h-full flex items-center justify-center text-secondary">
@@ -42,15 +43,15 @@ export default function ArticleCard({
           )}
         </div>
 
-        {/* Content */}
-        <div className="p-4 sm:p-5 flex flex-col justify-center flex-1">
+        {/* Content - below image */}
+        <div>
           {category && (
-            <span className="category-badge mb-2 self-start">
+            <span className="category-badge mb-3 inline-block">
               {category.name}
             </span>
           )}
 
-          <h2 className="font-headings text-lg font-medium text-primary leading-snug mb-2 hover:text-[#4A4A4A] transition-colors">
+          <h2 className="text-2xl font-bold text-primary leading-tight mb-2 group-hover:text-secondary transition-colors tracking-[-0.036em]">
             {title}
           </h2>
 

@@ -4,11 +4,11 @@ import { prisma } from "@/lib/prisma";
 import { FileText, FolderOpen, Video, HelpCircle } from "lucide-react";
 
 export default async function AdminDashboard() {
-  const [articlesCount, categoriesCount, lecturesCount, questionsCount, recentArticles] =
+  const [articlesCount, categoriesCount, playlistsCount, questionsCount, recentArticles] =
     await Promise.all([
       prisma.article.count(),
       prisma.category.count(),
-      prisma.lecture.count(),
+      prisma.playlist.count(),
       prisma.question.count(),
       prisma.article.findMany({
         orderBy: { createdAt: "desc" },
@@ -23,7 +23,7 @@ export default async function AdminDashboard() {
   const stats = [
     { label: "Artikuj", count: articlesCount, icon: FileText, color: "bg-blue-50 text-blue-600" },
     { label: "Kategori", count: categoriesCount, icon: FolderOpen, color: "bg-green-50 text-green-600" },
-    { label: "Ligjerata", count: lecturesCount, icon: Video, color: "bg-red-50 text-red-600" },
+    { label: "Seri", count: playlistsCount, icon: Video, color: "bg-red-50 text-red-600" },
     { label: "Pyetje", count: questionsCount, icon: HelpCircle, color: "bg-purple-50 text-purple-600" },
   ];
 

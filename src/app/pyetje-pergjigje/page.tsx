@@ -1,85 +1,91 @@
-"use client";
+export const dynamic = "force-dynamic";
 
-import { useEffect, useState } from "react";
-import { ChevronDown } from "lucide-react";
+import { Metadata } from "next";
+import { prisma } from "@/lib/prisma";
+import { MessageCircleQuestion } from "lucide-react";
+import QAList from "@/components/QAList";
+import SubmitQuestion from "@/components/SubmitQuestion";
 
-interface Question {
-  id: string;
-  question: string;
-  answer: string;
-}
+export const metadata: Metadata = {
+  title: "Pyetje & Përgjigje Islame - Fetva nga Dr. Muhamed Broja",
+  description:
+    "Përgjigje për pyetje të shpeshta rreth fesë islame nga Dr. Muhamed Broja. Pyetje rreth namazit, agjërimit, familjes, zekatit dhe temave të tjera islame.",
+  openGraph: {
+    title: "Pyetje & Përgjigje Islame | Dr. Muhamed Broja",
+    description:
+      "Përgjigje profesionale për pyetje rreth fesë islame nga Dr. Muhamed Broja.",
+    locale: "sq_AL",
+  },
+  twitter: {
+    card: "summary",
+    title: "Pyetje & Përgjigje Islame - Dr. Muhamed Broja",
+    description:
+      "Përgjigje për pyetje rreth fesë islame në gjuhën shqipe.",
+  },
+  alternates: {
+    canonical: "/pyetje-pergjigje",
+  },
+};
 
-export default function QAPage() {
-  const [questions, setQuestions] = useState<Question[]>([]);
-  const [openId, setOpenId] = useState<string | null>(null);
-  const [loading, setLoading] = useState(true);
+export default async function QAPage() {
+  const questions = await prisma.question.findMany({
+    where: { published: true },
+    orderBy: [{ order: "asc" }, { createdAt: "desc" }],
+  });
 
-  useEffect(() => {
-    fetch("/api/questions")
-      .then((res) => res.json())
-      .then((data) => {
-        setQuestions(data);
-        setLoading(false);
-      });
-  }, []);
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: questions.map((q) => ({
+      "@type": "Question",
+      name: q.question,
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: q.answer.replace(/<[^>]+>/g, ""),
+      },
+    })),
+  };
+
+  const serialized = questions.map((q) => ({
+    id: q.id,
+    question: q.question,
+    category: q.category || "Te pergjithshme",
+    date: q.createdAt.toLocaleDateString("sq-AL", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    }),
+  }));
 
   return (
     <div className="max-w-content mx-auto px-4 py-8">
-      <div className="max-w-3xl mx-auto">
-        <div className="bg-white rounded-lg border border-border p-6 sm:p-8 mb-8">
-          <h1 className="font-headings text-2xl sm:text-3xl font-medium mb-2">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+
+      {/* Hero */}
+      <div className="max-w-3xl mx-auto mb-8">
+        <div className="flex items-center gap-3 mb-3">
+          <div className="w-10 h-10 rounded-xl bg-accent/10 flex items-center justify-center">
+            <MessageCircleQuestion size={20} className="text-accent" />
+          </div>
+          <h1 className="font-headings text-2xl sm:text-3xl font-medium tracking-[-0.02em]">
             Pyetje & Përgjigje
           </h1>
-          <p className="text-secondary text-sm">
-            Përgjigje për pyetje të shpeshta rreth fesë islame.
-          </p>
         </div>
+        <p className="text-secondary text-sm ml-[52px]">
+          Përgjigje për pyetje të shpeshta rreth fesë islame nga Dr. Muhamed
+          Broja.
+        </p>
+      </div>
 
-        <div className="space-y-3">
-          {loading ? (
-            <div className="space-y-3">
-              {Array.from({ length: 5 }).map((_, i) => (
-                <div key={i} className="bg-white rounded-lg border border-border p-5 animate-pulse">
-                  <div className="h-5 bg-layout-bg rounded w-3/4" />
-                </div>
-              ))}
-            </div>
-          ) : questions.length === 0 ? (
-            <div className="bg-white rounded-lg border border-border p-12 text-center">
-              <p className="text-secondary">Nuk ka pyetje ende.</p>
-            </div>
-          ) : (
-            questions.map((q) => (
-              <div
-                key={q.id}
-                className="bg-white rounded-lg border border-border overflow-hidden"
-              >
-                <button
-                  onClick={() => setOpenId(openId === q.id ? null : q.id)}
-                  className="w-full flex items-center justify-between p-5 text-left hover:bg-layout-bg/50 transition-colors"
-                >
-                  <h2 className="font-headings text-base font-medium text-primary pr-4">
-                    {q.question}
-                  </h2>
-                  <ChevronDown
-                    size={20}
-                    className={`shrink-0 text-secondary transition-transform duration-200 ${
-                      openId === q.id ? "rotate-180" : ""
-                    }`}
-                  />
-                </button>
-                {openId === q.id && (
-                  <div className="px-5 pb-5 pt-0 border-t border-border">
-                    <div
-                      className="text-sm text-secondary leading-relaxed mt-4 article-content"
-                      dangerouslySetInnerHTML={{ __html: q.answer }}
-                    />
-                  </div>
-                )}
-              </div>
-            ))
-          )}
-        </div>
+      {/* Search + Questions */}
+      <QAList questions={serialized} />
+
+      {/* Submit Question */}
+      <div className="max-w-3xl mx-auto mt-10">
+        <SubmitQuestion />
       </div>
     </div>
   );

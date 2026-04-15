@@ -18,7 +18,7 @@ export default function SearchBar() {
       params.delete("kerko");
     }
     params.delete("faqja");
-    router.push(`/?${params.toString()}`);
+    router.push(`/?${params.toString()}#articles`);
   }
 
   return (
@@ -28,7 +28,7 @@ export default function SearchBar() {
         value={query}
         onChange={(e) => setQuery(e.target.value)}
         placeholder="Kërko artikuj..."
-        className="w-full bg-white border border-border rounded-md px-4 py-2.5 pr-10 text-sm text-primary placeholder:text-secondary focus:outline-none focus:border-secondary transition-colors"
+        className="w-full bg-white/80 border border-accent/15 rounded-full px-5 py-2.5 pr-10 text-sm text-primary placeholder:text-secondary/60 focus:outline-none focus:border-accent/30 focus:bg-white transition-colors"
       />
       <button
         type="submit"

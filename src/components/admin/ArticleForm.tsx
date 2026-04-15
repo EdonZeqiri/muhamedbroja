@@ -4,6 +4,8 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
 import { Save, Eye } from "lucide-react";
+import ImagePicker from "./ImagePicker";
+import PreviewModal from "./PreviewModal";
 
 const TiptapEditor = dynamic(() => import("./TiptapEditor"), { ssr: false });
 
@@ -33,6 +35,7 @@ export default function ArticleForm({ article }: ArticleFormProps) {
   const [categoryId, setCategoryId] = useState(article?.categoryId || "");
   const [categories, setCategories] = useState<Category[]>([]);
   const [saving, setSaving] = useState(false);
+  const [preview, setPreview] = useState(false);
 
   useEffect(() => {
     fetch("/api/categories")
@@ -55,7 +58,14 @@ export default function ArticleForm({ article }: ArticleFormProps) {
   async function handleSave(pub: boolean) {
     setSaving(true);
 
-    const data = { title, content, excerpt, thumbnail, categoryId, published: pub };
+    const data = {
+      title,
+      content,
+      excerpt,
+      thumbnail,
+      categoryId,
+      published: pub,
+    };
 
     const url = article ? `/api/articles/${article.id}` : "/api/articles";
     const method = article ? "PUT" : "POST";
@@ -76,6 +86,8 @@ export default function ArticleForm({ article }: ArticleFormProps) {
     setSaving(false);
   }
 
+  const selectedCategory = categories.find((c) => c.id === categoryId);
+
   return (
     <div className="space-y-6">
       {/* Title */}
@@ -93,13 +105,19 @@ export default function ArticleForm({ article }: ArticleFormProps) {
       {/* Editor */}
       <div>
         <label className="block text-sm font-medium mb-1.5">Përmbajtja</label>
-        <TiptapEditor content={content} onChange={setContent} />
+        <TiptapEditor
+          content={content}
+          onChange={setContent}
+          placeholder="Shkruaj artikullin këtu..."
+        />
       </div>
 
       {/* Meta */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
-          <label className="block text-sm font-medium mb-1.5">Përshkrimi i shkurtër</label>
+          <label className="block text-sm font-medium mb-1.5">
+            Përshkrimi i shkurtër
+          </label>
           <textarea
             value={excerpt}
             onChange={(e) => setExcerpt(e.target.value)}
@@ -107,9 +125,10 @@ export default function ArticleForm({ article }: ArticleFormProps) {
             className="w-full border border-border rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-secondary resize-none"
             placeholder="Përshkrim i shkurtër për SEO..."
           />
-        </div>
-        <div>
-          <label className="block text-sm font-medium mb-1.5">Kategoria</label>
+
+          <label className="block text-sm font-medium mb-1.5 mt-4">
+            Kategoria
+          </label>
           <select
             value={categoryId}
             onChange={(e) => setCategoryId(e.target.value)}
@@ -122,16 +141,12 @@ export default function ArticleForm({ article }: ArticleFormProps) {
               </option>
             ))}
           </select>
-
-          <label className="block text-sm font-medium mb-1.5 mt-4">Foto kryesore</label>
-          {thumbnail && (
-            <img src={thumbnail} alt="" className="w-full h-32 object-cover rounded-lg mb-2 border border-border" />
-          )}
-          <input
-            type="file"
-            accept="image/*"
-            onChange={handleThumbnailUpload}
-            className="text-sm text-secondary"
+        </div>
+        <div>
+          <ImagePicker
+            value={thumbnail}
+            onChange={setThumbnail}
+            onUpload={handleThumbnailUpload}
           />
         </div>
       </div>
@@ -154,7 +169,68 @@ export default function ArticleForm({ article }: ArticleFormProps) {
           <Save size={16} />
           Ruaj si draft
         </button>
+        <button
+          type="button"
+          onClick={() => setPreview(true)}
+          disabled={!title && !content}
+          className="inline-flex items-center gap-2 text-sm font-medium text-accent hover:text-accent/80 disabled:opacity-50 transition-colors ml-auto"
+        >
+          <Eye size={16} />
+          Shiko si duket
+        </button>
       </div>
+
+      {/* Preview Modal */}
+      <PreviewModal open={preview} onClose={() => setPreview(false)}>
+        <div className="max-w-3xl mx-auto">
+          <div className="bg-white/70 rounded-2xl border border-accent/10 overflow-hidden">
+            <div className="p-6 sm:p-8">
+              <h1 className="font-headings text-2xl sm:text-3xl font-medium leading-tight mb-4">
+                {title || "Titulli i artikullit"}
+              </h1>
+
+              {selectedCategory && (
+                <span className="inline-block px-3 py-1 text-xs font-medium rounded-full bg-accent/10 text-accent mb-4">
+                  {selectedCategory.name}
+                </span>
+              )}
+
+              <div className="flex items-center gap-3 text-sm text-secondary pb-6 border-b border-border">
+                <span className="font-medium">Dr. Muhamed Broja</span>
+                <span className="text-border">|</span>
+                <time>
+                  {new Date().toLocaleDateString("sq-AL", {
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric",
+                  })}
+                </time>
+              </div>
+            </div>
+
+            {thumbnail && (
+              <div className="px-6 sm:px-8">
+                <div className="relative w-full aspect-video rounded-lg overflow-hidden mb-8">
+                  <img
+                    src={thumbnail}
+                    alt={title}
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+              </div>
+            )}
+
+            <div className="px-6 sm:px-8 pb-8">
+              <div
+                className="article-content"
+                dangerouslySetInnerHTML={{
+                  __html: content || "<p>Përmbajtja e artikullit...</p>",
+                }}
+              />
+            </div>
+          </div>
+        </div>
+      </PreviewModal>
     </div>
   );
 }
