@@ -24,9 +24,39 @@ const nextConfig = {
       },
       {
         protocol: "https",
+        hostname: "www.muhamedbroja.com",
+      },
+      {
+        protocol: "https",
         hostname: "images.unsplash.com",
       },
+      {
+        protocol: "https",
+        hostname: "*.vercel-storage.com",
+      },
     ],
+  },
+  async redirects() {
+    return [
+      // Redirect old WordPress category URLs to articles page
+      {
+        source: "/kategoria/:slug*",
+        destination: "/shkrime",
+        permanent: true,
+      },
+      // Redirect old WordPress tag URLs
+      {
+        source: "/tag/:slug*",
+        destination: "/shkrime",
+        permanent: true,
+      },
+      // Redirect old WordPress author URLs
+      {
+        source: "/author/:slug*",
+        destination: "/biografia",
+        permanent: true,
+      },
+    ];
   },
 };
 
