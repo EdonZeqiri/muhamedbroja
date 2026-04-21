@@ -52,6 +52,27 @@ export default function robots(): MetadataRoute.Robots {
         allow: "/",
         disallow: ["/admin/", "/api/"],
       },
+      // Social media crawlers (for link previews)
+      {
+        userAgent: "facebookexternalhit",
+        allow: "/",
+        disallow: ["/admin/", "/api/"],
+      },
+      {
+        userAgent: "Twitterbot",
+        allow: "/",
+        disallow: ["/admin/", "/api/"],
+      },
+      {
+        userAgent: "LinkedInBot",
+        allow: "/",
+        disallow: ["/admin/", "/api/"],
+      },
+      {
+        userAgent: "WhatsApp",
+        allow: "/",
+        disallow: ["/admin/", "/api/"],
+      },
     ],
     sitemap: `${baseUrl}/sitemap.xml`,
   };
